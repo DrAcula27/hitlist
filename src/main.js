@@ -1,5 +1,5 @@
 import './style.css';
-import { Client, Databases, ID } from 'appwrite';
+import { Client, Databases, ID, Permission, Role } from 'appwrite';
 
 const client = new Client()
   .setEndpoint('https://cloud.appwrite.io/v1')
@@ -7,25 +7,34 @@ const client = new Client()
 
 const databases = new Databases(client);
 
-const promise = databases.createDocument(
-  '67afd3100028054f9ba7',
-  '67afd316002511720abd',
-  ID.unique(),
-  {
-    'company-name': '100devs',
-    'date-added': new Date(),
-    'job-title': 'software engineer',
-    'position-type': 'remote',
-    pay: '$100,000',
-    source: 'https://www.100devs.org',
-  }
-);
+const form = document.querySelector('form');
+form.addEventListener('submit', addJob);
 
-promise.then(
-  function (response) {
-    console.log(response);
-  },
-  function (error) {
-    console.log(error);
-  }
-);
+function addJob(e) {
+  e.preventDefault();
+
+  const promise = databases.createDocument(
+    '67afd3100028054f9ba7',
+    '67afd316002511720abd',
+    ID.unique(),
+    {
+      'company-name': e.target.companyName.value,
+      'date-added': e.target.dateAdded.value,
+      'job-title': e.target.jobTitle.value,
+      'position-type': e.target.positionType.value,
+      pay: e.target.pay.value,
+      source: e.target.source.value,
+    }
+  );
+  promise.then(
+    function (response) {
+      console.log(response);
+    },
+    function (error) {
+      console.log(error);
+    }
+  );
+  form.reset();
+}
+
+function addJobsToDOM() {}
